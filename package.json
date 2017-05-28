@@ -1,11 +1,26 @@
 {
   "scripts": {
-    "test": "karma start karma.conf.js",
-    "build": "./node_modules/.bin/webpack",
-    "webpack": "./node_modules/.bin/webpack"
+    "test": "karma start karma.conf.js"
   },
   "dependencies": {},
   "devDependencies": {
     "webpack": "^2.6.1"
-  }
+  },
+  "name": "webassembly-js",
+  "description": "Webassembly and javascript performance comparison",
+  "version": "1.0.0",
+  "main": "webpack.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eliamaino/webassembly-js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eliamaino/webassembly-js/issues"
+  },
+  "homepage": "https://github.com/eliamaino/webassembly-js#readme"
 }

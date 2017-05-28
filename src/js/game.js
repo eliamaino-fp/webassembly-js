@@ -1,51 +1,22 @@
-import './environment'
+import { getNextState } from './environment'
+
+const stateData = [
+  'dead-cell',
+  'alive-cell'
+];
 
 export default class Game {
-  constructor () {
-    this.width = 0;
-    this.height = 0;
-    this.currentState = [];
-    this.elm = null;
-  }
-
-  setup (elm, width, height, initialConfig) {
+  constructor (elm, width, height, initialConfig) {
     this.width = width;
     this.height = height;
+    this.currentState = initialConfig;
     this.elm = elm;
-
-    if (!initialConfig) {
-      this.currentState = this.createGameMatrix(width, height);
-    } else {
-      this.currentState = this.createGameSetupMatrix(initialConfig);
-    }
     this.renderEnviroment(elm, this.currentState.slice());
-
-    return this;
   }
 
   next () {
-    this.currentState = environment.getNextState(this.currentState.slice());
+    this.currentState = getNextState(this.currentState.slice());
     this.render(this.elm, this.currentState.slice());
-  }
-
-  createGameSetupMatrix(initialConfig) {
-    return initialConfig.map(line => line.map(column => column ? ALIVE : DEAD));
-  }
-
-  createGameMatrix(width, height) {
-    let gameMatrix = new Array(height);
-
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        if (gameMatrix[y] === undefined) {
-          gameMatrix[y] = new Array(width);
-        }
-
-        gameMatrix[y][x] = Math.ceil(Math.random() * 1000) % 2 ? DEAD : ALIVE;
-      }
-    }
-
-    return gameMatrix;
   }
 
   renderEnviroment (elm, state) {
@@ -55,16 +26,20 @@ export default class Game {
       let row = visualState.insertRow(y);
       for (let x = 0; x < this.width; x++) {
         let cell = row.insertCell(x);
-        cell.dataset.state = state[y][x];
+        cell.dataset.state = stateData[state[y][x]];
       }
     }
   }
 
   render (elm, state) {
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        elm.rows[y].cells[x].dataset.state = state[y][x];
-      }
+    const size = this.height * this.width;
+
+    let j = -1, x, y;
+    for (let i = 0; i < size; i++) {
+      x = (i % this.width) ? j : ++j;
+      y = i % this.width;
+
+      elm.rows[y].cells[x].dataset.state = stateData[state[y][x]];
     }
   }
 }
