@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "test": "karma start karma.conf.js",
+    "build": "./node_modules/.bin/webpack",
+    "webpack": "./node_modules/.bin/webpack"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^2.6.1"
+  }
+}
