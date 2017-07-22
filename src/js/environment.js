@@ -4,65 +4,67 @@ export const ALIVE = 1;
 const MIN_COUNT = 2;
 const MAX_COUNT = 3;
 
-export function getNextState (currentStatus) {
-  let rows = currentStatus.length,
-    columns = currentStatus[0].length,
-    nextState = new Array(rows);
+export function getNextStatus(currentState, width, height) {
+  const bounds = createBounds(width, height);
+  let line = 0,
+    column = 0,
+    index = 0,
+    nextState = new Uint8Array(width*height),
+    maxHeight = height - 1;
 
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < columns; x++) {
-      if (nextState[y] === undefined) {
-        nextState[y] = new Array(columns);
-      }
-
-      let neighboursCount = getNeighboursCount(x, y, currentStatus.slice());
-
-      nextState[y][x] = getCellStatus(
-        currentStatus[y][x],
-        neighboursCount
+  for (line = 0; line < height; line++) {
+    for (column = 0; column < width; column++) {
+      nextState[index] = getCellStatus(
+        currentState[index],
+        getNeighboursCount(currentState, column, line, maxHeight, bounds)
       );
+
+      index++;
     }
   }
 
-  return nextState.slice();
+  return nextState;
 }
 
-function getNeighboursCount (x, y, currentStatus) {
-  return getNeighbours(x, y, currentStatus.slice()).filter(status => status === ALIVE).length;
+export function getNeighboursCount(currentState, column, line, height, bounds) {
+  let previousLine = line === 0 ? height : line - 1,
+      nextLine = line === height ? 0 : line + 1;
+
+  return getLineCount(currentState, column, bounds[line])
+      + getLineCount(currentState, column, bounds[nextLine])
+      + getLineCount(currentState, column, bounds[previousLine])
+      - currentState[bounds[line].left + column];
 }
 
-function getCellStatus (status, neighboursCount) {
-  let returnStatus = DEAD;
+function getLineCount(currentState, column, bounds) {
+  let offset = bounds.left + column;
 
-  if (status === ALIVE) {
-    if (neighboursCount < MIN_COUNT) {
-      returnStatus = DEAD;
-    } else if (neighboursCount <= MAX_COUNT) {
-      returnStatus = ALIVE;
-    } else {
-      returnStatus = DEAD;
-    }
-  } else if (neighboursCount === MAX_COUNT) {
-    returnStatus = ALIVE;
+  return currentState[offset]
+    + currentState[offset === bounds.left ? bounds.right : offset - 1]
+    + currentState[offset === bounds.right ? bounds.left : offset + 1];
+}
+
+export function createBounds(width, height) {
+  let bounds = [], leftBound;
+
+  for (let i = 0; i < height; i++) {
+    leftBound = i * width;
+    bounds.push({
+      left: leftBound,
+      right: leftBound + width - 1
+    });
   }
 
-  return returnStatus;
+  return bounds;
 }
 
-function getNeighbours (x, y, matrix) {
-  let rows = matrix.length,
-    columns = matrix[0].length,
-    neighbours = [];
-
-  for (let i = y - 1; i <= y + 1; i++) {
-    if (i >= 0 && i < rows) {
-      for (let j = x - 1; j <= x + 1; j++) {
-        if (j >= 0 && j < columns) {
-          if(x != j || y != i) neighbours.push(matrix[i][j]);
-        }
-      }
-    }
+export function getCellStatus (status, neighboursCount) {
+  switch (true) {
+    case neighboursCount === MAX_COUNT:
+      return ALIVE;
+    case neighboursCount === 2:
+      return status;
+    default:
+      return DEAD;
   }
-
-  return neighbours;
 }

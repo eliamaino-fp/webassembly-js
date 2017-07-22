@@ -1,9 +1,12 @@
 {
   "scripts": {
-    "test": "karma start karma.conf.js"
+    "test": "mocha-webpack --webpack-config webpack.config-test.js \"test/**/*.test.js\""
   },
   "dependencies": {},
   "devDependencies": {
+    "chai": "^4.1.0",
+    "mocha": "^3.4.2",
+    "mocha-webpack": "^0.7.0",
     "webpack": "^2.6.1"
   },
   "name": "webassembly-js",
