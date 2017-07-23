@@ -1,19 +1,20 @@
-import Game from './game'
+import { game } from './game'
 
-const createGameMatrix = (width, height) => new Array(width * height).fill(0)
+const createGameMatrix = (width, height) => new Uint8Array(width * height).fill(0)
   .map(() => Math.ceil(Math.random() * 1000) % 2);
 
-console.info(createGameMatrix(100, 100));
+const LINES = 400;
+const COLUMNS = 225;
 
-let game = new Game(
+let next = game(
   document.getElementById('game'),
-  100,
-  100,
-  createGameMatrix(100, 100)
+  LINES,
+  COLUMNS,
+  createGameMatrix(LINES, COLUMNS)
 );
 
 let loop = () => {
-  game.next();
+  next();
   requestAnimationFrame(loop);
 }
 

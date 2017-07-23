@@ -4,7 +4,7 @@ export const ALIVE = 1;
 const MIN_COUNT = 2;
 const MAX_COUNT = 3;
 
-export function getNextStatus(currentState, width, height) {
+export function getNextState(currentState, width, height) {
   const bounds = createBounds(width, height);
   let line = 0,
     column = 0,

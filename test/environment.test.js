@@ -3,7 +3,7 @@ import {
   getCellStatus,
   createBounds,
   getNeighboursCount,
-  getNextStatus
+  getNextState
 } from '../src/js/environment'
 import {
   block,
@@ -100,25 +100,25 @@ describe('The Environment', () => {
     });
   });
 
-  describe('getNextStatus', () => {
+  describe('getNextState', () => {
     it('should keep "Still lifes" patterns', () => {
-      expect(Array.from(getNextStatus(block, 4, 4))).to.be.deep.equal(block);
-      expect(Array.from(getNextStatus(beehive, 6, 5))).to.be.deep.equal(beehive);
-      expect(Array.from(getNextStatus(loaf, 6, 6))).to.be.deep.equal(loaf);
-      expect(Array.from(getNextStatus(boat, 5, 5))).to.be.deep.equal(boat);
-      expect(Array.from(getNextStatus(tub, 5, 5))).to.be.deep.equal(tub);
+      expect(Array.from(getNextState(block, 4, 4))).to.be.deep.equal(block);
+      expect(Array.from(getNextState(beehive, 6, 5))).to.be.deep.equal(beehive);
+      expect(Array.from(getNextState(loaf, 6, 6))).to.be.deep.equal(loaf);
+      expect(Array.from(getNextState(boat, 5, 5))).to.be.deep.equal(boat);
+      expect(Array.from(getNextState(tub, 5, 5))).to.be.deep.equal(tub);
     });
     
     it('should change "Ocilators" patterns', () => {
-      expect(Array.from(getNextStatus(blinker1, 5, 5))).to.be.deep.equal(blinker2);
-      expect(Array.from(getNextStatus(blinker2, 5, 5))).to.be.deep.equal(blinker1);
-      expect(Array.from(getNextStatus(toad1, 6, 6))).to.be.deep.equal(toad2);
-      expect(Array.from(getNextStatus(toad2, 6, 6))).to.be.deep.equal(toad1);
-      expect(Array.from(getNextStatus(beacon1, 6, 6))).to.be.deep.equal(beacon2);
-      expect(Array.from(getNextStatus(beacon2, 6, 6))).to.be.deep.equal(beacon1);
-      expect(Array.from(getNextStatus(pulsar1, 17, 17))).to.be.deep.equal(pulsar2);
-      expect(Array.from(getNextStatus(pulsar2, 17, 17))).to.be.deep.equal(pulsar3);
-      expect(Array.from(getNextStatus(pulsar3, 17, 17))).to.be.deep.equal(pulsar1);
+      expect(Array.from(getNextState(blinker1, 5, 5))).to.be.deep.equal(blinker2);
+      expect(Array.from(getNextState(blinker2, 5, 5))).to.be.deep.equal(blinker1);
+      expect(Array.from(getNextState(toad1, 6, 6))).to.be.deep.equal(toad2);
+      expect(Array.from(getNextState(toad2, 6, 6))).to.be.deep.equal(toad1);
+      expect(Array.from(getNextState(beacon1, 6, 6))).to.be.deep.equal(beacon2);
+      expect(Array.from(getNextState(beacon2, 6, 6))).to.be.deep.equal(beacon1);
+      expect(Array.from(getNextState(pulsar1, 17, 17))).to.be.deep.equal(pulsar2);
+      expect(Array.from(getNextState(pulsar2, 17, 17))).to.be.deep.equal(pulsar3);
+      expect(Array.from(getNextState(pulsar3, 17, 17))).to.be.deep.equal(pulsar1);
     });
   });
 });
