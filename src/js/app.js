@@ -1,7 +1,7 @@
 import { game } from './game'
 
 const createGameMatrix = (width, height) => new Uint8Array(width * height).fill(0)
-  .map(() => Math.ceil(Math.random() * 1000) % 2);
+  .map(() => Math.ceil(Math.random() * 1000) % 4 ? 0 : 1)
 
 const LINES = 400;
 const COLUMNS = 225;

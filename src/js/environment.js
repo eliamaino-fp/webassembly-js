@@ -1,19 +1,16 @@
-export const DEAD = 0;
-export const ALIVE = 1;
-
+const DEAD = 0;
+const ALIVE = 1;
 const MIN_COUNT = 2;
 const MAX_COUNT = 3;
 
 export function getNextState(currentState, width, height) {
   const bounds = createBounds(width, height);
-  let line = 0,
-    column = 0,
-    index = 0,
+  let index = 0,
     nextState = new Uint8Array(width*height),
     maxHeight = height - 1;
 
-  for (line = 0; line < height; line++) {
-    for (column = 0; column < width; column++) {
+  for (let line = 0; line < height; line++) {
+    for (let column = 0; column < width; column++) {
       nextState[index] = getCellStatus(
         currentState[index],
         getNeighboursCount(currentState, column, line, maxHeight, bounds)
@@ -31,9 +28,9 @@ export function getNeighboursCount(currentState, column, line, height, bounds) {
       nextLine = line === height ? 0 : line + 1;
 
   return getLineCount(currentState, column, bounds[line])
-      + getLineCount(currentState, column, bounds[nextLine])
-      + getLineCount(currentState, column, bounds[previousLine])
-      - currentState[bounds[line].left + column];
+    + getLineCount(currentState, column, bounds[nextLine])
+    + getLineCount(currentState, column, bounds[previousLine])
+    - currentState[bounds[line].left + column];
 }
 
 function getLineCount(currentState, column, bounds) {
@@ -59,10 +56,10 @@ export function createBounds(width, height) {
 }
 
 export function getCellStatus (status, neighboursCount) {
-  switch (true) {
-    case neighboursCount === MAX_COUNT:
+  switch (neighboursCount) {
+    case MAX_COUNT:
       return ALIVE;
-    case neighboursCount === 2:
+    case 2:
       return status;
     default:
       return DEAD;
