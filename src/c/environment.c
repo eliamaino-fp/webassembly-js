@@ -11,7 +11,6 @@ int maxCount = 3;
 
 
 
-EMSCRIPTEN_KEEPALIVE
 int getCellStatus(int status, int neighboursCount) {
 	switch(neighboursCount) {
 		case 3: 
@@ -27,7 +26,6 @@ int getCellStatus(int status, int neighboursCount) {
 }
 
 
-EMSCRIPTEN_KEEPALIVE
 int getLineCount(int *current, int column, int boundLeft, int boundRight) {
 	int offset = boundLeft + column;
 	int left = (offset == boundLeft) ? current[boundRight] : current[offset - 1];
@@ -36,7 +34,6 @@ int getLineCount(int *current, int column, int boundLeft, int boundRight) {
 	return current[offset] + left + right;
 }
 
-EMSCRIPTEN_KEEPALIVE
 int getNeighboursCount(int *current, int column, int line, int height, int width, int *bounds) {
 	int previousLine = (line == 0) ? height : line - 1;
 	int nextLine = (line == height) ? 0 : line + 1;
@@ -47,7 +44,6 @@ int getNeighboursCount(int *current, int column, int line, int height, int width
       	- current[bounds[line] + column];
 }
 
-EMSCRIPTEN_KEEPALIVE
 int *createBounds(int width, int height) {
 	int *bounds = malloc(height * 2 * sizeof(int));
 
