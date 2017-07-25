@@ -12,5 +12,3 @@ var Module;if(!Module)Module=(typeof Module!=="undefined"?Module:null)||{};var m
 if (typeof module === "object" && module.exports) {
   module['exports'] = Module;
 };
-
-export {Module as default}
