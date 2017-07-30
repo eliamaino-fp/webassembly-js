@@ -18,26 +18,16 @@ export function getNextState(currentState, width, height, offset = 0, limit = wi
     column = line == initialLine ? offset % width : 0;
     while (index < limit && column < width) {
       nextState[index] = getCellStatus(
-        currentState[index],
+        currentState[offset],
         getNeighboursCount(currentState, column, line, maxHeight, bounds)
       );
 
-      index++; column++;
+      index++;
+      column++;
+      offset++;
     }
     line++;
   }
-
-  // for (; line < height; line++) {
-//     for (; column < width; column++) {
-//       nextState[index] = getCellStatus(
-//         currentState[index],
-//         getNeighboursCount(currentState, column, line, maxHeight, bounds)
-//       );
-//
-//       index++;
-//       if (index >= limit) break;
-//     }
-//   }
 
   return nextState;
 }
