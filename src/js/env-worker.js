@@ -1,0 +1,6 @@
+console.info('yo!');
+
+addEventListener('message', function(e) {
+  console.info('worker :', e);
+  postMessage(e.data);
+});

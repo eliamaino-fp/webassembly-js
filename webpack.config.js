@@ -1,9 +1,16 @@
 var path = require('path');
 
 module.exports = {
-  entry: './src/js/app.js',
+  entry: {
+    'app' : './src/js/app.js',
+    'env-worker': './src/js/env-worker.js'
+  },
   output: {
-    filename: 'app.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist')
+  },
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    port: 3000
   }
 };

@@ -4,7 +4,7 @@ import {
   createBounds,
   getNeighboursCount,
   getNextState
-} from '../src/js/environment'
+} from '../src/js/modules/environment'
 import {
   block,
   beehive,
@@ -12,6 +12,8 @@ import {
   boat,
   tub,
   blinker1,
+  topHalfBlinker1,
+  bottomHalfBlinker1,
   blinker2,
   toad1,
   toad2,
@@ -119,6 +121,14 @@ describe('The Environment', () => {
       expect(Array.from(getNextState(pulsar1, 17, 17))).to.be.deep.equal(pulsar2);
       expect(Array.from(getNextState(pulsar2, 17, 17))).to.be.deep.equal(pulsar3);
       expect(Array.from(getNextState(pulsar3, 17, 17))).to.be.deep.equal(pulsar1);
+    });
+
+    it('should calculate next state based on offset', () => {
+      expect(Array.from(getNextState(blinker1, 5, 5, 0, 13))).to.be.deep.equal(topHalfBlinker1);
+      expect(Array.from(getNextState(blinker1, 5, 5, 13))).to.be.deep.equal(bottomHalfBlinker1);
+      let finalResult = Array.from(getNextState(blinker1, 5, 5, 0, 13))
+        .concat(Array.from(getNextState(blinker1, 5, 5, 13)));
+      expect(Array.from(finalResult)).to.be.deep.equal(blinker2);
     });
   });
 });

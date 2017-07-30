@@ -46,6 +46,18 @@ export const blinker1 = [
   0, 0, 0, 0, 0
 ];
 
+export const topHalfBlinker1 = [
+  0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0,
+  0, 1, 1
+];
+
+export const bottomHalfBlinker1 = [
+           1, 0,
+  0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0
+];
+
 export const blinker2 = [
   0, 0, 0, 0, 0,
   0, 0, 0, 0, 0,
