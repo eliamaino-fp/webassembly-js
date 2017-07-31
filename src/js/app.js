@@ -20,4 +20,9 @@ let loop = () => {
   });
 }
 
-loop();
+// let loop = () => {
+//   next();
+//   requestAnimationFrame(loop);
+// }
+
+// loop();
