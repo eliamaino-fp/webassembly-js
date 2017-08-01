@@ -9,8 +9,6 @@ int alive = 1;
 int minCount = 2;
 int maxCount = 3;
 
-
-
 int getCellStatus(int status, int neighboursCount) {
 	switch(neighboursCount) {
 		case 3: 
@@ -26,7 +24,7 @@ int getCellStatus(int status, int neighboursCount) {
 }
 
 
-int getLineCount(int *current, int column, int boundLeft, int boundRight) {
+int getLineCount(char *current, int column, int boundLeft, int boundRight) {
 	int offset = boundLeft + column;
 	int left = (offset == boundLeft) ? current[boundRight] : current[offset - 1];
 	int right = (offset == boundRight) ? current[boundLeft] : current[offset + 1]; 
@@ -34,7 +32,7 @@ int getLineCount(int *current, int column, int boundLeft, int boundRight) {
 	return current[offset] + left + right;
 }
 
-int getNeighboursCount(int *current, int column, int line, int height, int width, int *bounds) {
+int getNeighboursCount(char *current, int column, int line, int height, int width, char *bounds) {
 	int previousLine = (line == 0) ? height : line - 1;
 	int nextLine = (line == height) ? 0 : line + 1;
 
@@ -44,25 +42,22 @@ int getNeighboursCount(int *current, int column, int line, int height, int width
       	- current[bounds[line] + column];
 }
 
-int *createBounds(int width, int height) {
-	int *bounds = malloc(height * 2 * sizeof(int));
-
+void createBounds(char *bounds, int width, int height) {
 	int leftBound = 0;
 
-	for (int i = 0; i < width; i++) {
+	for (int i = 0; i < height; i++) {
 		leftBound = i * width;
 		bounds[i] = leftBound;
 		bounds[i + width] = leftBound + width - 1;
 	}
 
-	return bounds;
+	return;
 }
 
 EMSCRIPTEN_KEEPALIVE
-void getNextState(int *current, int width, int height) {
-	int *bounds = createBounds(width, height);
+void getNextState(char *current, char *next, char *bounds, int width, int height) {
+	createBounds(bounds, width, height);
 	int maxHeight = height - 1;
-	int *next = malloc(width * height * sizeof(int));
 	int index = 0;
 
 	for (int i = 0; i < height; i++) {
@@ -73,12 +68,6 @@ void getNextState(int *current, int width, int height) {
 			);
 
 			index++;
-		}
-	}
-
-	for (int i = 0; i < height; i++) {
-		for (int j = 0; j < width; j++) {
-			current[index] = next[index];
 		}
 	}
 

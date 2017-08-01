@@ -7,10 +7,10 @@ export function game(elm, columns, lines, initialConfig) {
 
   render(state);
 
-  let memoryOffset = initializeEnv(columns, lines);
+  let memoryOffset = initializeEnv(initialConfig, columns, lines);
 
   return function renderState () {
-    state = getNextState(state, columns, lines, memoryOffset);
+    state = getNextState(state);
     render(state);
   }
 };
