@@ -1,5 +1,7 @@
+import WasmEngine from './wasmEngine'   
 import { getNextState } from './environment'
 import { getRender } from './render'
+
 
 export function game(elm, columns, lines, initialConfig) {
   let state = initialConfig,
@@ -7,8 +9,10 @@ export function game(elm, columns, lines, initialConfig) {
 
   render(state);
 
+  const wasmEngine = new WasmEngine(columns, lines);
+
   return function renderState () {
-    state = getNextState(state, columns, lines);
+    state = wasmEngine.computeNextState(state);
     render(state);
   }
 };
