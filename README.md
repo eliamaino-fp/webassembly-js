@@ -1,3 +1,11 @@
 Webassembly and javascript performance comparison
 
-emcc src/js/c/environment.c -o src/js/c/environment.js -s ALIASING_FUNCTION_POINTERS=0
+## To compile
+
+run: 
+
+```emcc src/js/c/environment.c -o src/js/c/environment.js```
+
+then add ```export {Module as default}``` at the end of the file  ```src/js/c/environment.js```
+
+then run ```webpack```
