@@ -1,4 +1,4 @@
-import { getNextState, initializeEnv } from './c/c_environment'
+import { CEnvironment } from './c/c_environment'
 import { getRender } from './render'
 
 export function game(elm, columns, lines, initialConfig) {
@@ -7,10 +7,11 @@ export function game(elm, columns, lines, initialConfig) {
 
   render(state);
 
-  let memoryOffset = initializeEnv(initialConfig, columns, lines);
+  let env = new CEnvironment(columns, lines);
+  env.initializeEnv(initialConfig);
 
   return function renderState () {
-    state = getNextState(state);
+    state = env.getNextState(state);
     render(state);
   }
 };

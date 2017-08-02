@@ -1,39 +1,40 @@
 import em_module from './environment'
 
-const getNextStateC = em_module.cwrap('getNextState', null, ['number', 'number', 'number', 'number', 'number']);
-const createBounds = em_module.cwrap('createBounds', null, ['number', 'number', 'number']);
-let currentOffset, nextOffset, boundsOffset, width, height, nextStatus, bounds;
-
-export function initializeEnv(currentStatus, w, h) {
-	width = w;
-	height = h;
-	nextStatus = new Uint8Array(width * height).fill(0);
-	bounds = new Uint32Array(height * 2).fill(0);
-	const memoryCurrent = currentStatus.length + currentStatus.BYTES_PER_ELEMENT;
-	const memoryNext = nextStatus.length + nextStatus.BYTES_PER_ELEMENT;
-	const memoryBounds = bounds.length + bounds.BYTES_PER_ELEMENT;
-	const memoryNeeded = memoryCurrent + memoryNext + memoryBounds;
-	
-	currentOffset = em_module._malloc(memoryNeeded);
-	nextOffset = currentOffset + (width * height);
-	boundsOffset = nextOffset + (width * height);
-
-	createBounds(boundsOffset, width, height);
-}
-
-export function getNextState(currentStatus) {
-	const numberOfCells = width * height;
-
-	em_module.HEAPU8.set(currentStatus, currentOffset);
-	em_module.HEAPU8.set(nextStatus, nextOffset);
-	em_module.HEAPU8.set(bounds, boundsOffset);
-
-	getNextStateC(currentOffset, nextOffset, boundsOffset, width, height);
-
-	for (let i = 0; i < numberOfCells; i++) {
-		let internalOffset = nextOffset + i;
-		nextStatus[i] = em_module.getValue(internalOffset,'i8');
+export class CEnvironment {
+	constructor(width, height) {
+		this.width = width;
+		this.height = height;
+		this.numberOfCells = this.width * this.height;
+		this.getNextStateC = em_module.cwrap('getNextState', null, ['number', 'number', 'number', 'number', 'number']);
+		this.createBounds = em_module.cwrap('createBounds', null, ['number', 'number', 'number']);
 	}
 
-	return nextStatus;
-} 
+	initializeEnv(initialState) {
+		this.nextState = new Uint8Array(this.width * this.height).fill(0);
+		this.bounds = new Uint32Array(this.height * 2).fill(0);
+		
+		let memoryCurrent = initialState.length + initialState.BYTES_PER_ELEMENT,
+            memoryNext = this.nextState.length + this.nextState.BYTES_PER_ELEMENT,
+		    memoryBounds = this.bounds.length + this.bounds.BYTES_PER_ELEMENT,
+		    memoryNeeded = memoryCurrent + memoryNext + memoryBounds;
+		
+		this.currentOffset = em_module._malloc(memoryNeeded);
+		this.nextOffset = this.currentOffset + memoryCurrent;
+		this.boundsOffset = this.nextOffset + memoryNext;
+	}
+
+	getNextState(currentState) {
+		em_module.HEAPU8.set(currentState, this.currentOffset);
+		em_module.HEAPU8.set(this.nextState, this.nextOffset);
+		em_module.HEAPU8.set(this.bounds, this.boundsOffset);
+
+		this.getNextStateC(this.currentOffset, this.nextOffset, this.boundsOffset, this.width, this.height);
+
+		for (let i = 0; i < this.numberOfCells; i++) {
+			let internalOffset = this.nextOffset + i;
+			this.nextState[i] = em_module.getValue(internalOffset,'i8');
+		}
+
+		return this.nextState;
+	}
+}
