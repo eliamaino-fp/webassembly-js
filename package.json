@@ -3,7 +3,9 @@
     "test": "mocha-webpack --webpack-config webpack.config-test.js \"test/**/*.test.js\"",
     "start": "webpack-dev-server"
   },
-  "dependencies": {},
+  "dependencies": {
+    "config": "^1.26.1"
+  },
   "devDependencies": {
     "chai": "^4.1.0",
     "mocha": "^3.4.2",

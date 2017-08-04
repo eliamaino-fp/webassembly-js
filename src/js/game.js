@@ -11,7 +11,7 @@ export function game(elm, columns, lines, initialConfig) {
   env.initializeEnv(initialConfig);
 
   return function renderState () {
-    state = env.getNextState(state);
+    state = env.getNextState();
     render(state);
   }
 };

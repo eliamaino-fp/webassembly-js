@@ -21,19 +21,25 @@ export class CEnvironment {
 		this.currentOffset = em_module._malloc(memoryNeeded);
 		this.nextOffset = this.currentOffset + memoryCurrent;
 		this.boundsOffset = this.nextOffset + memoryNext;
-	}
 
-	getNextState(currentState) {
-		em_module.HEAPU8.set(currentState, this.currentOffset);
+		em_module.HEAPU8.set(initialState, this.currentOffset);
 		em_module.HEAPU8.set(this.nextState, this.nextOffset);
 		em_module.HEAPU8.set(this.bounds, this.boundsOffset);
 
+		this.createBounds(this.boundsOffset, this.width, this.height);
+	}
+
+	getNextState() {
 		this.getNextStateC(this.currentOffset, this.nextOffset, this.boundsOffset, this.width, this.height);
 
 		for (let i = 0; i < this.numberOfCells; i++) {
 			let internalOffset = this.nextOffset + i;
 			this.nextState[i] = em_module.getValue(internalOffset,'i8');
 		}
+
+		let no = this.nextOffset;
+		this.nextOffset = this.currentOffset;
+		this.currentOffset = no;
 
 		return this.nextState;
 	}

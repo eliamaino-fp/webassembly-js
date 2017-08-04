@@ -51,7 +51,6 @@ void createBounds(int *bounds, int width, int height) {
 
 EMSCRIPTEN_KEEPALIVE
 void getNextState(char *current, char *next, int *bounds, int width, int height) {
-	createBounds(bounds, width, height);
 	int maxHeight = height - 1;
 	int index = 0;
 
@@ -67,4 +66,11 @@ void getNextState(char *current, char *next, int *bounds, int width, int height)
 	}
 
 	return;
+}
+
+int main() {
+  EM_ASM(
+    console.log("C game of life is started!");
+  );
+  return 0;
 }
