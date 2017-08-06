@@ -1,4 +1,4 @@
-const SQUARE_SIZE = 2;
+const SQUARE_SIZE = 1;
 
 let offscreenCanvas = null,
     offscreenCanvasCtx = null,

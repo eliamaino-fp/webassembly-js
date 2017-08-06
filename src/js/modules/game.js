@@ -1,27 +1,14 @@
-import { getNextState } from './environment'
-import { getRender } from './render'
+import { getNextState } from './environment';
+import { splitJob } from './worker-dispacher';
+import { getRender } from './render';
 
 export function game(elm, columns, lines, initialConfig, useWorker) {
   let state = initialConfig,
     render = getRender(elm, columns, lines),
-    worker = null,
     nextState;
 
   if (window.Worker && useWorker) {
-    let promise,
-        resolve;
-
-    promise = new Promise.resolve(res => { resolve = res });
-    worker = new Worker('env-worker.js');
-
-    nextState = (state, columns, lines) => {
-      worker.addEventListener('message', e => {
-        resolve(e.data)
-      });
-      worker.postMessage(state);
-
-      return promise;
-    }
+    nextState = splitJob(2);
   } else {
     nextState = getNextState;
   }
