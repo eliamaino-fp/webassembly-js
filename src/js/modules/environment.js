@@ -3,21 +3,30 @@ const ALIVE = 1;
 const MIN_COUNT = 2;
 const MAX_COUNT = 3;
 
-export function getNextState(currentState, width, height) {
+export function getNextState(currentState, width, height, offset = 0, limit = width * height) {
+  limit -= offset;
+
   const bounds = createBounds(width, height);
   let index = 0,
-    nextState = new Uint8Array(width*height),
-    maxHeight = height - 1;
+    nextState = new Uint8Array(limit),
+    maxHeight = height - 1,
+    initialLine = Math.floor(offset / width),
+    column,
+    line = initialLine;
 
-  for (let line = 0; line < height; line++) {
-    for (let column = 0; column < width; column++) {
+  while (index < limit && line < height ) {
+    column = line == initialLine ? offset % width : 0;
+    while (index < limit && column < width) {
       nextState[index] = getCellStatus(
-        currentState[index],
+        currentState[offset],
         getNeighboursCount(currentState, column, line, maxHeight, bounds)
       );
 
       index++;
+      column++;
+      offset++;
     }
+    line++;
   }
 
   return nextState;
@@ -25,7 +34,7 @@ export function getNextState(currentState, width, height) {
 
 export function getNeighboursCount(currentState, column, line, height, bounds) {
   let previousLine = line === 0 ? height : line - 1,
-      nextLine = line === height ? 0 : line + 1;
+    nextLine = line === height ? 0 : line + 1;
 
   return getLineCount(currentState, column, bounds[line])
     + getLineCount(currentState, column, bounds[nextLine])

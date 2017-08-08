@@ -4,7 +4,7 @@ import {
   createBounds,
   getNeighboursCount,
   getNextState
-} from '../src/js/environment'
+} from '../src/js/modules/environment'
 import {
   block,
   beehive,
@@ -12,6 +12,8 @@ import {
   boat,
   tub,
   blinker1,
+  topHalfBlinker1,
+  bottomHalfBlinker1,
   blinker2,
   toad1,
   toad2,
@@ -19,7 +21,10 @@ import {
   beacon2,
   pulsar1,
   pulsar2,
-  pulsar3
+  pulsar3,
+  blinker1_3,
+  blinker2_3,
+  blinker3_3
 } from './patterns'
 
 const ALIVE = 1;
@@ -120,5 +125,32 @@ describe('The Environment', () => {
       expect(Array.from(getNextState(pulsar2, 17, 17))).to.be.deep.equal(pulsar3);
       expect(Array.from(getNextState(pulsar3, 17, 17))).to.be.deep.equal(pulsar1);
     });
+
+    it('should calculate next state based on offset', () => {
+      expect(Array.from(getNextState(blinker1, 5, 5, 0, 13))).to.be.deep.equal(topHalfBlinker1);
+      expect(Array.from(getNextState(blinker1, 5, 5, 13))).to.be.deep.equal(bottomHalfBlinker1);
+
+      expect(Array.from(getNextState(blinker1, 5, 5, 0, 8))).to.be.deep.equal(blinker1_3);
+      expect(Array.from(getNextState(blinker1, 5, 5, 8, 16))).to.be.deep.equal(blinker2_3);
+      expect(Array.from(getNextState(blinker1, 5, 5, 16))).to.be.deep.equal(blinker3_3);
+    });
+
+    it('should be able to split the task', () => {
+      let taskDividedByTwo = Array.from(getNextState(blinker1, 5, 5, 0, 13))
+        .concat(Array.from(getNextState(blinker1, 5, 5, 13)));
+      expect(Array.from(taskDividedByTwo)).to.be.deep.equal(blinker2);
+
+      let bigTaskDividedByTwo = Array.from(getNextState(pulsar1, 17, 17, 0, 144))
+        .concat(Array.from(getNextState(pulsar1, 17, 17, 144)));
+      expect(Array.from(bigTaskDividedByTwo)).to.be.deep.equal(pulsar2);
+
+      let taskDividedByThree = Array.from(getNextState(pulsar1, 17, 17, 0, 96))
+        .concat(
+          Array.from(getNextState(pulsar1, 17, 17, 96, 192)),
+          Array.from(getNextState(pulsar1, 17, 17, 192))
+        );
+
+      expect(Array.from(taskDividedByThree)).to.be.deep.equal(pulsar2);
+    })
   });
 });
