@@ -11,6 +11,7 @@ let next = game(
   COLUMNS,
   LINES,
   createGameMatrix(LINES, COLUMNS),
+  false,
   false
 ), i = 0;
 
@@ -19,10 +20,5 @@ let loop = () => {
       requestAnimationFrame(loop);
   });
 }
-
-// let loop = () => {
-//   next();
-//   requestAnimationFrame(loop);
-// }
 
 loop();

@@ -69,8 +69,5 @@ void getNextState(char *current, char *next, int *bounds, int width, int height)
 }
 
 int main() {
-  EM_ASM(
-    console.log("C game of life is started!");
-  );
   return 0;
 }
