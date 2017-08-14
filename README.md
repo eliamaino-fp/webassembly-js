@@ -23,6 +23,7 @@ then run ```webpack```
 
 ## To choose between C, Vanilla js and web workers
 
-Modify the parameter passed to ```game``` function in ```app.js```:
-- set the first parameter to true to enable web workers (not supported for c environment)
-- set the second parameter to true to enable the c environment
+Modify the ```strategy``` constant passed to ```game``` function in ```app.js```, you can choose between:
+- ```vanilla``` for simple Vanilla JS.
+- ```workers``` for the Vanilla JS strategy which uses web workers to split the calculation in multiple threads.
+- ```wasm``` for the strategy which uses C compiled functions to calculate the next state.
