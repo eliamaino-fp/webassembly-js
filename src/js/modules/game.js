@@ -1,19 +1,16 @@
 import { getNextState } from './environment';
+import { cEnvironment } from './c/c_environment';
 import { splitJob } from './worker-dispacher';
 import { getRender } from './render';
-import { CEnvironment } from './c/c_environment'
 
-export function game(elm, columns, lines, initialConfig, useWorker, useC) {
+export function game(elm, columns, lines, initialConfig, strategy) {
   let state = initialConfig,
     render = getRender(elm, columns, lines),
-    nextState,
-    cEnv;
+    nextState;
 
-  if (useC) {
-    cEnv = new CEnvironment(columns, lines);
-    cEnv.initializeEnv(initialConfig);
-    nextState = cEnv.getNextState;
-  } else if (window.Worker && useWorker) {
+  if (strategy === 'wasm') {
+    nextState = cEnvironment(columns, lines, initialConfig);
+  } else if (window.Worker && strategy === 'workers') {
     nextState = splitJob(2);
   } else {
     nextState = getNextState;
@@ -22,8 +19,8 @@ export function game(elm, columns, lines, initialConfig, useWorker, useC) {
   render(state);
 
   return async function renderState () {
-    if (useC) {
-      state = await cEnv.getNextState();
+    if (strategy === 'wasm') {
+      state = await nextState();
     } else {
       state = await nextState(state, columns, lines);
     }

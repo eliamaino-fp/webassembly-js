@@ -5,14 +5,14 @@ const createGameMatrix = (width, height) => new Uint8Array(width * height).fill(
 
 const COLUMNS = 800;
 const LINES = 450;
+const STRATEGY = 'vanilla';
 
 let next = game(
   document.getElementById('game'),
   COLUMNS,
   LINES,
   createGameMatrix(LINES, COLUMNS),
-  false,
-  false
+  STRATEGY
 ), i = 0;
 
 let loop = () => {

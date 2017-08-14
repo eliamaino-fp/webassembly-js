@@ -1,46 +1,41 @@
-import em_module from './environment'
+import em_module from './environment';
 
-export class CEnvironment {
-	constructor(width, height) {
-		this.width = width;
-		this.height = height;
-		this.numberOfCells = this.width * this.height;
-		this.getNextStateC = em_module.cwrap('getNextState', null, ['number', 'number', 'number', 'number', 'number']);
-		this.createBounds = em_module.cwrap('createBounds', null, ['number', 'number', 'number']);
-	}
+export function cEnvironment(width, height, initialState) {
+	let numberOfCells = width * height;
+	
+	// Initialize C wrapped functions
+	let	getNextStateC = em_module.cwrap('getNextState', null, ['number', 'number', 'number', 'number', 'number']),
+		createBounds = em_module.cwrap('createBounds', null, ['number', 'number', 'number']);
 
-	initializeEnv(initialState) {
-		this.nextState = new Uint8Array(this.width * this.height).fill(0);
-		this.bounds = new Uint32Array(this.height * 2).fill(0);
-		
-		let memoryCurrent = initialState.length + initialState.BYTES_PER_ELEMENT,
-            memoryNext = this.nextState.length + this.nextState.BYTES_PER_ELEMENT,
-		    memoryBounds = this.bounds.length + this.bounds.BYTES_PER_ELEMENT,
-		    memoryNeeded = memoryCurrent + memoryNext + memoryBounds;
-		
-		this.currentOffset = em_module._malloc(memoryNeeded);
-		this.nextOffset = this.currentOffset + memoryCurrent;
-		this.boundsOffset = this.nextOffset + memoryNext;
+	// Initialize memory
+	let	nextState = new Uint8Array(width * height).fill(0),
+		bounds = new Uint32Array(height * 2).fill(0),
+	    memoryCurrent = initialState.length + initialState.BYTES_PER_ELEMENT,
+		memoryNext = nextState.length + nextState.BYTES_PER_ELEMENT,
+		memoryBounds = bounds.length + bounds.BYTES_PER_ELEMENT,
+		memoryNeeded = memoryCurrent + memoryNext + memoryBounds,
+		currentOffset = em_module._malloc(memoryNeeded),
+		nextOffset = currentOffset + memoryCurrent,
+		boundsOffset = nextOffset + memoryNext;
 
-		em_module.HEAPU8.set(initialState, this.currentOffset);
-		em_module.HEAPU8.set(this.nextState, this.nextOffset);
-		em_module.HEAPU8.set(this.bounds, this.boundsOffset);
+	em_module.HEAPU8.set(initialState, currentOffset);
+	em_module.HEAPU8.set(nextState, nextOffset);
+	em_module.HEAPU8.set(bounds, boundsOffset);
 
-		this.createBounds(this.boundsOffset, this.width, this.height);
-	}
+	createBounds(boundsOffset, width, height);
 
-	getNextState() {
-		this.getNextStateC(this.currentOffset, this.nextOffset, this.boundsOffset, this.width, this.height);
+	return function getNextState() {
+		getNextStateC(currentOffset, nextOffset, boundsOffset, width, height);
 
-		for (let i = 0; i < this.numberOfCells; i++) {
-			let internalOffset = this.nextOffset + i;
-			this.nextState[i] = em_module.getValue(internalOffset,'i8');
+		for (let i = 0; i < numberOfCells; i++) {
+			let internalOffset = nextOffset + i;
+			nextState[i] = em_module.getValue(internalOffset,'i8');
 		}
 
-		let no = this.nextOffset;
-		this.nextOffset = this.currentOffset;
-		this.currentOffset = no;
+	let no = nextOffset;
+	nextOffset = currentOffset;
+	currentOffset = no;
 
-		return this.nextState;
+	return nextState;
 	}
 }
