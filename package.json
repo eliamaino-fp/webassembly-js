@@ -6,10 +6,10 @@
   "dependencies": {},
   "devDependencies": {
     "chai": "^4.1.0",
-    "mocha": "^3.4.2",
+    "mocha": "^5.2.0",
     "mocha-webpack": "^0.7.0",
     "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.6.1"
+    "webpack-dev-server": "^3.1.14"
   },
   "name": "webassembly-js",
   "description": "Webassembly and javascript performance comparison",
